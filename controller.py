@@ -37,7 +37,6 @@ def main():
                 done = True
         last_coverage = coverage
         view.clear_screen(room_model.state)
-        clock.tick(60)
      
         for event in pygame.event.get(): # User did something
             #print "Got event",event,"type:",event.type
