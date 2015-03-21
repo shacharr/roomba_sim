@@ -1,5 +1,16 @@
 import math
 
+class Point(object):
+    def __init__(self,coords):
+        self.x = coords[0]
+        self.y = coords[1]
+
+    def delta(self,other):
+        return Point([self.x-other.x,self.y-other.y])
+
+    def dot(self,other):
+        return self.x*other.x + self.y*other.y
+
 def rotate(coords, direction):
     # from https://www.siggraph.org/education/materials/HyperGraph/modeling/mod_tran/2drota.htm
     x,y = coords

@@ -4,17 +4,6 @@ import random
 
 from helper_functions import *
 
-class Point(object):
-    def __init__(self,coords):
-        self.x = coords[0]
-        self.y = coords[1]
-
-    def delta(self,other):
-        return Point([self.x-other.x,self.y-other.y])
-
-    def dot(self,other):
-        return self.x*other.x + self.y*other.y
-
 MODE_TIME_LIMIT = [1000,5000]
 
 class RoombaModel(object):

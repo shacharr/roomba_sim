@@ -1,7 +1,6 @@
 import time
 import pygame
 import math
-import random
 
 import arena_model
 import arena_view
@@ -13,8 +12,6 @@ ROOM_POLYGON = [(0,0),(640,0),(640,480),(320,480),(320,240),(0,240)]
 
 ROOMBA_SIZE = 20
 
-TURN_SIZE_ON_WALL_FOLLOW = math.pi/180.
-MAX_TURN_STEPS = 360
 
 def main():
     pygame.init()
