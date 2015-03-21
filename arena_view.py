@@ -2,13 +2,7 @@ import time
 import pygame
 import math
 
-def rotate(coords, direction):
-    # from https://www.siggraph.org/education/materials/HyperGraph/modeling/mod_tran/2drota.htm
-    x,y = coords
-    cos_d = math.cos(direction)
-    sin_d = math.sin(direction)
-    return (x*cos_d - y*sin_d,
-            y*cos_d + x*sin_d)
+from helper_functions import *
 
 class ScreenView(object):
     WHITE = (255,255,255)
@@ -29,9 +23,10 @@ class ScreenView(object):
         self.arrow_scaled_coords = tuple((tuple((y*roomba_size for y in x))
                                           for x in self.ARROW_RELATIVE_COORDS))
 
-    def clear_screen(self):
+    def clear_screen(self,room_surface):
         pygame.display.flip()
         self.screen.fill(self.WHITE)
+        self.screen.blit(room_surface,(0,0))
 
     def draw_roomba(self,mid_point, direction):
         pygame.draw.circle(self.screen, self.RED,
