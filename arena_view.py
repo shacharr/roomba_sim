@@ -37,7 +37,7 @@ class ScreenView(object):
         pygame.draw.circle(self.screen, self.RED,
                            mid_point, self.roomba_size)
 
-        rotated_arrow = tuple(rotate(coords, direction * math.pi / 180.)
+        rotated_arrow = tuple(rotate(coords, direction)
                               for coords in self.arrow_scaled_coords)
         transposed_arrow = tuple((tuple((y1+y2 for (y1,y2) in zip(x,mid_point)))
                                   for x in rotated_arrow))
@@ -58,7 +58,7 @@ def testView():
                 done=True
         if done:
             break
-        view.draw_roomba((100,100),i/4.)
+        view.draw_roomba((100,100),i * math.pi / 180. )
         view.clear_screen()
 
 #time.sleep(10)
