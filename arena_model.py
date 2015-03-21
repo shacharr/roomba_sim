@@ -23,11 +23,18 @@ class RoombaModel(object):
         self.room = room
         self.cleaning_head_size = cleaning_head_size
 
-    def step(self):
+    def calc_step_next_loc(self):
         x,y = self.loc
         step_x = -self.speed * math.sin(self.direction)
         step_y = self.speed * math.cos(self.direction)
-        new_loc = (x+step_x, y+step_y)
+        return (x+step_x, y+step_y)
+
+    def check_step(self):
+        new_loc = self.calc_step_next_loc()
+        return self.room.is_coliding(new_loc,self.size)
+
+    def step(self):
+        new_loc = self.calc_step_next_loc()
         # Assumes speed is slow enough to prevent quantom tunneling of the roomba...
         if not self.room.is_coliding(new_loc,self.size):
             mid_point = [(x+y)/2. for x,y in zip(new_loc,self.loc)]

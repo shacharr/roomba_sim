@@ -12,7 +12,10 @@ MODE_TIME_LIMIT = [1000,5000]
 ROOM_POLYGON = [(0,0),(640,0),(640,480),(0,480)]
 #ROOM_POLYGON = [(0,0),(640,0),(640,480),(320,480),(320,240),(0,240)]
 
-ROOMBA_SIZE = 50
+ROOMBA_SIZE = 20
+
+TURN_SIZE_ON_WALL_FOLLOW = math.pi/180.
+MAX_TURN_STEPS = 360
 
 def main():
     pygame.init()
@@ -34,6 +37,12 @@ def main():
                 done=True
         if done:
             break
+        if not in_random_direction_mode:
+            for i in range(MAX_TURN_STEPS):
+                roomba_model.turn(-TURN_SIZE_ON_WALL_FOLLOW)
+                if roomba_model.check_step():
+                    break
+            roomba_model.turn(TURN_SIZE_ON_WALL_FOLLOW)
         collided = roomba_model.step()
         view.draw_roomba(*roomba_model.get_draw_info())
         time_in_mode += 1
@@ -41,7 +50,7 @@ def main():
             if in_random_direction_mode:
                 roomba_model.turn(random.randint(0,360)*math.pi/180.)
             else:
-                roomba_model.turn(math.pi/180.)
+                roomba_model.turn(TURN_SIZE_ON_WALL_FOLLOW)
             if time_in_mode > MODE_TIME_LIMIT[in_random_direction_mode]:
                 in_random_direction_mode = not in_random_direction_mode
                 time_in_mode = 0
