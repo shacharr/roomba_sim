@@ -15,7 +15,7 @@ def main():
     roomba_size = 50
     view = arena_view.ScreenView(roomba_size)
     room_model = arena_model.RoomModel([(0,0),(640,0),(640,480),(0,480)])
-    roomba_model = arena_model.RoombaModel((300,300), roomba_size,0,3,room_model)
+    roomba_model = arena_model.RoombaModel((300,300), roomba_size, 1.9, 0, 3, room_model)
     done = False
     in_random_direction_mode = False
     time_in_mode = 0

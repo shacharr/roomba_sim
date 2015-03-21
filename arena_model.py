@@ -15,12 +15,13 @@ class Point(object):
         return self.x*other.x + self.y*other.y
 
 class RoombaModel(object):
-    def __init__(self, location, size, direction, speed, room):
+    def __init__(self, location, size, cleaning_head_size, direction, speed, room):
         self.loc = location
         self.direction = direction
         self.speed = speed
         self.size = size
         self.room = room
+        self.cleaning_head_size = cleaning_head_size
 
     def step(self):
         x,y = self.loc
@@ -37,6 +38,20 @@ class RoombaModel(object):
         return True
 
     def turn(self, relative_direction):
+        delta_x = self.size * self.cleaning_head_size / 2.
+        cleaned_triangle_1 = [(0,0), (delta_x,0), rotate((delta_x,0), relative_direction)]
+        cleaned_triangle_2 = [(0,0), (-delta_x,0), rotate((-delta_x,0), relative_direction)]
+
+        cleaned_triangle_1 = rotate_polygon(cleaned_triangle_1,
+                                            self.direction)
+        cleaned_triangle_2 = rotate_polygon(cleaned_triangle_2,
+                                            self.direction)
+
+        cleaned_triangle_1 = transpose_polygon(cleaned_triangle_1,self.loc)
+        cleaned_triangle_2 = transpose_polygon(cleaned_triangle_2,self.loc)
+        self.room.clean_triangle(cleaned_triangle_1)
+        self.room.clean_triangle(cleaned_triangle_2)
+
         self.direction += relative_direction
 
     def get_draw_info(self):
@@ -58,11 +73,14 @@ class RoomModel(object):
                   ( len_x/2, len_y/2),(-len_x/2, len_y/2)]
 
         #Rotate
-        coords = [rotate(p,direction) for p in coords]
+        coords = rotate_polygon(coords,direction)
 
         #Move
-        coords = [[x+y for x,y in zip(p,mid_point)] for p in coords]
+        coords = transpose_polygon(coords,mid_point)
         pygame.draw.polygon(self.state,(0,0,255),coords)
+
+    def clean_triangle(self, corners):
+        pygame.draw.polygon(self.state,(0,0,255),corners)
 
     def is_coliding(self, loc, size):
         room_polygon = self.polygon

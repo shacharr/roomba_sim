@@ -29,3 +29,10 @@ def line_circle_intersect(line_details, circle_details):
     t1_good = t1 >= 0 and t1 <= 1
     t2_good = t2 >= 0 and t2 <= 1
     return t1_good or t2_good
+
+def rotate_polygon(poly,direction):
+    return [rotate(p,direction) for p in poly]
+
+
+def transpose_polygon(poly,delta_coords):
+    return [[x+y for x,y in zip(p,delta_coords)] for p in poly]
