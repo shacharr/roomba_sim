@@ -13,6 +13,8 @@ ROOM_POLYGON = [(0,0),(640,0),(640,480),(320,480),(320,240),(0,240)]
 
 ROOMBA_SIZE = 20
 
+MIN_COVERAGE_TO_EXIT = 0.99
+MAX_NO_GAIN_STEPS = 3000
 
 def main():
     pygame.init()
@@ -23,8 +25,16 @@ def main():
     room_model = arena_model.RoomModel(ROOM_POLYGON)
     roomba_model = arena_model.RoombaModel((100,100), ROOMBA_SIZE, 1.9, 0, 3, room_model)
     done = False
+    last_coverage = 0
+    steps_with_no_improvement = 0
     while True:
-        stats.append(float(room_model.clean_count)/(room_model.clean_count + room_model.dirty_count))
+        coverage = float(room_model.clean_count)/(room_model.clean_count + room_model.dirty_count)
+        stats.append(coverage)
+        if coverage == last_coverage and coverage > MIN_COVERAGE_TO_EXIT:
+            steps_with_no_improvement += 1
+            if steps_with_no_improvement > MAX_NO_GAIN_STEPS:
+                done = True
+        last_coverage = coverage
         view.clear_screen(room_model.state)
         clock.tick(60)
      
