@@ -50,7 +50,8 @@ def main():
             if in_random_direction_mode:
                 roomba_model.turn(random.randint(0,360)*math.pi/180.)
             else:
-                roomba_model.turn(TURN_SIZE_ON_WALL_FOLLOW)
+                while roomba_model.check_step():
+                    roomba_model.turn(TURN_SIZE_ON_WALL_FOLLOW)
             if time_in_mode > MODE_TIME_LIMIT[in_random_direction_mode]:
                 in_random_direction_mode = not in_random_direction_mode
                 time_in_mode = 0
