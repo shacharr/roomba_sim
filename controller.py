@@ -9,8 +9,8 @@ import arena_view
 
 MODE_TIME_LIMIT = [1000,5000]
 
-ROOM_POLYGON = [(0,0),(640,0),(640,480),(0,480)]
-#ROOM_POLYGON = [(0,0),(640,0),(640,480),(320,480),(320,240),(0,240)]
+#ROOM_POLYGON = [(0,0),(640,0),(640,480),(0,480)]
+ROOM_POLYGON = [(0,0),(640,0),(640,480),(320,480),(320,240),(0,240)]
 
 ROOMBA_SIZE = 20
 
@@ -29,7 +29,7 @@ def main():
     time_in_mode = 0
     while True:
         view.clear_screen(room_model.state)
-        clock.tick(30)
+        clock.tick(60)
      
         for event in pygame.event.get(): # User did something
             #print "Got event",event,"type:",event.type
