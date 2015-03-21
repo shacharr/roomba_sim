@@ -17,6 +17,7 @@ class RoombaModel(object):
         self.room = room
         self.cleaning_head_size = cleaning_head_size
         self.in_random_direction_mode = False
+        self.looking_for_wall = False
         self.time_in_mode = 0
 
     def calc_move_next_loc(self):
@@ -58,15 +59,20 @@ class RoombaModel(object):
         self.direction += relative_direction
 
     def step(self):
-        if not self.in_random_direction_mode:
+        if not self.in_random_direction_mode and not self.looking_for_wall:
+            found_wall = False
             for i in range(self.MAX_TURN_STEPS):
                 self.turn(-self.TURN_SIZE_ON_WALL_FOLLOW)
                 if self.check_move():
+                    found_wall = True
                     break
+            if not found_wall:
+                self.looking_for_wall = True
             self.turn(self.TURN_SIZE_ON_WALL_FOLLOW)
         collided = self.move()
         self.time_in_mode += 1
         if collided:
+            self.looking_for_wall = False
             if self.in_random_direction_mode:
                 self.turn(random.randint(0,360)*math.pi/180.)
             else:
