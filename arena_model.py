@@ -4,7 +4,7 @@ import random
 
 from helper_functions import *
 
-MODE_TIME_LIMIT = [1000,5000]
+MODE_TIME_LIMIT = [500,2000]
 
 class RoombaModel(object):
     TURN_SIZE_ON_WALL_FOLLOW = math.pi/180.
