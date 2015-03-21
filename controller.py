@@ -9,13 +9,18 @@ import arena_view
 
 MODE_TIME_LIMIT = [1000,5000]
 
+ROOM_POLYGON = [(0,0),(640,0),(640,480),(0,480)]
+#ROOM_POLYGON = [(0,0),(640,0),(640,480),(320,480),(320,240),(0,240)]
+
+ROOMBA_SIZE = 50
+
 def main():
     pygame.init()
     clock = pygame.time.Clock()
-    roomba_size = 50
-    view = arena_view.ScreenView(roomba_size)
-    room_model = arena_model.RoomModel([(0,0),(640,0),(640,480),(0,480)])
-    roomba_model = arena_model.RoombaModel((300,300), roomba_size, 1.9, 0, 3, room_model)
+
+    view = arena_view.ScreenView(ROOMBA_SIZE, [max(x[0] for x in ROOM_POLYGON),max(x[1] for x in ROOM_POLYGON)])
+    room_model = arena_model.RoomModel(ROOM_POLYGON)
+    roomba_model = arena_model.RoombaModel((100,100), ROOMBA_SIZE, 1.9, 0, 3, room_model)
     done = False
     in_random_direction_mode = False
     time_in_mode = 0

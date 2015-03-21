@@ -11,14 +11,12 @@ class ScreenView(object):
     GREEN = (  0,255,  0)
     RED   = (255,  0,  0)
 
-    SIZE  = (640, 480)
-
     ARROW_RELATIVE_COORDS = ((0,0.8),(0.4,0.5),(0.2,0.5),(0.2,-0.6),
                              (-0.2,-0.6),(-0.2,0.5),(-0.4,0.5),(0,0.8))
 
 
-    def __init__(self, roomba_size):
-        self.screen = pygame.display.set_mode(self.SIZE)
+    def __init__(self, roomba_size, screen_size):
+        self.screen = pygame.display.set_mode(screen_size)
         self.roomba_size = roomba_size
         self.arrow_scaled_coords = tuple((tuple((y*roomba_size for y in x))
                                           for x in self.ARROW_RELATIVE_COORDS))
