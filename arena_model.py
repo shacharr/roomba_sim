@@ -28,7 +28,7 @@ class RoombaModel(object):
         step_y = self.speed * math.cos(self.direction)
         new_loc = (x+step_x, y+step_y)
         # Assumes speed is slow enough to prevent quantom tunneling of the roomba...
-        if not self.is_coliding(new_loc):
+        if not self.room.is_coliding(new_loc,self.size):
             mid_point = [(x+y)/2. for x,y in zip(new_loc,self.loc)]
             self.room.clean_box(self.size*1.9, self.speed,
                                 self.direction, mid_point)
@@ -42,13 +42,6 @@ class RoombaModel(object):
     def get_draw_info(self):
         return ([int(x) for x in self.loc],self.direction)
 
-    def is_coliding(self, loc):
-        room_polygon = self.room.polygon
-        for line in zip(room_polygon,room_polygon[1:]+[room_polygon[0]]):
-            if line_circle_intersect([Point(line[0]),Point(line[1])],
-                                     [Point(loc), self.size]):
-                return True
-        return False
 
 class RoomModel(object):
     def __init__(self, polygon):
@@ -70,4 +63,12 @@ class RoomModel(object):
         #Move
         coords = [[x+y for x,y in zip(p,mid_point)] for p in coords]
         pygame.draw.polygon(self.state,(0,0,255),coords)
+
+    def is_coliding(self, loc, size):
+        room_polygon = self.polygon
+        for line in zip(room_polygon,room_polygon[1:]+[room_polygon[0]]):
+            if line_circle_intersect([Point(line[0]),Point(line[1])],
+                                     [Point(loc), size]):
+                return True
+        return False
 
