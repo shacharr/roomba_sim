@@ -52,8 +52,8 @@ class RoombaModel(object):
 
         cleaned_triangle_1 = transpose_polygon(cleaned_triangle_1,self.loc)
         cleaned_triangle_2 = transpose_polygon(cleaned_triangle_2,self.loc)
-        self.room.clean_triangle(cleaned_triangle_1)
-        self.room.clean_triangle(cleaned_triangle_2)
+        self.room.clean_polygon(cleaned_triangle_1)
+        self.room.clean_polygon(cleaned_triangle_2)
 
         self.direction += relative_direction
 
@@ -83,13 +83,16 @@ class RoombaModel(object):
 
 
 class RoomModel(object):
+    DIRTY_COLOR = (0,255,0)
+    CLEAN_COLOR = (0,0,255)
     def __init__(self, polygon):
         self.polygon = polygon
         max_x = max([x[0] for x in polygon])
         max_y = max([x[1] for x in polygon])
         self.state = pygame.Surface((max_x,max_y))
-        self.state.fill((255,255,255))
-        pygame.draw.polygon(self.state,(0,255,0),polygon)
+        self.state.fill((0,0,0))
+        pygame.draw.polygon(self.state,self.DIRTY_COLOR,polygon)
+        self.clean_count, self.dirty_count = self.count_clean_dirty(0,0,max_x,max_y)
 
     def clean_box(self, len_x, len_y, direction, mid_point):
         # Start at zero-coords
@@ -101,10 +104,15 @@ class RoomModel(object):
 
         #Move
         coords = transpose_polygon(coords,mid_point)
-        pygame.draw.polygon(self.state,(0,0,255),coords)
+        self.clean_polygon(coords)
 
-    def clean_triangle(self, corners):
-        pygame.draw.polygon(self.state,(0,0,255),corners)
+    def clean_polygon(self, corners):
+        bbox = polygon_bbox(corners)
+        orig_clean,orig_dirty = self.count_clean_dirty(*bbox)
+        pygame.draw.polygon(self.state,self.CLEAN_COLOR,corners)
+        new_clean,new_dirty = self.count_clean_dirty(*bbox)
+        self.clean_count += (new_clean - orig_clean)
+        self.dirty_count += (new_dirty - orig_dirty)
 
     def is_coliding(self, loc, size):
         room_polygon = self.polygon
@@ -114,3 +122,25 @@ class RoomModel(object):
                 return True
         return False
 
+    def count_clean_dirty(self,start_x,start_y,end_x,end_y):
+        clean_count = 0
+        dirty_count = 0
+        start_x = int(max(start_x-1,0))
+        max_x = self.state.get_clip().width
+        delta_x = int(min(end_x+1,max_x)) - start_x
+        start_y = int(max(start_y-1,0))
+        max_y = self.state.get_clip().height
+        delta_y = int(min(end_y+1,max_y)) - start_y
+        if delta_x <= 0 or delta_y <= 0:
+            return (0,0)
+        rect = pygame.Rect(start_x,start_y, delta_x,delta_y)
+        sub_surf = self.state.subsurface(rect)
+        ar = pygame.PixelArray(sub_surf)
+        for x in range(delta_x):
+            for y in range(delta_y):
+                if ar[x,y] == self.state.map_rgb(self.DIRTY_COLOR):
+                    dirty_count += 1
+                elif ar[x,y] == self.state.map_rgb(self.CLEAN_COLOR):
+                    clean_count += 1
+        del ar,sub_surf
+        return (clean_count,dirty_count)

@@ -47,3 +47,9 @@ def rotate_polygon(poly,direction):
 
 def transpose_polygon(poly,delta_coords):
     return [[x+y for x,y in zip(p,delta_coords)] for p in poly]
+
+def polygon_bbox(poly):
+    return [min(x[0] for x in poly),
+            min(x[1] for x in poly),
+            max(x[0] for x in poly),
+            max(x[1] for x in poly)]
