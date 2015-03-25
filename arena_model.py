@@ -2,17 +2,20 @@ import pygame
 
 from helper_functions import *
 
-
 class RoomModel(object):
     DIRTY_COLOR = (0,255,0)
     CLEAN_COLOR = (0,0,255)
-    def __init__(self, polygon):
+    DEAD_ZONE_COLOR = (0,0,0)
+    def __init__(self, polygon, obstacles=[]):
         self.polygon = polygon
+        self.obstacles = obstacles
         max_x = max([x[0] for x in polygon])
         max_y = max([x[1] for x in polygon])
         self.state = pygame.Surface((max_x,max_y))
-        self.state.fill((0,0,0))
+        self.state.fill(self.DEAD_ZONE_COLOR)
         pygame.draw.polygon(self.state,self.DIRTY_COLOR,polygon)
+        for p in obstacles:
+            pygame.draw.polygon(self.state,self.DEAD_ZONE_COLOR,p)
         self.clean_count, self.dirty_count = self.count_clean_dirty(0,0,max_x,max_y)
 
     def clean_box(self, len_x, len_y, direction, mid_point):
@@ -35,11 +38,10 @@ class RoomModel(object):
         self.clean_count += (new_clean - orig_clean)
         self.dirty_count += (new_dirty - orig_dirty)
 
+
     def is_coliding(self, loc, size):
-        room_polygon = self.polygon
-        for line in zip(room_polygon,room_polygon[1:]+[room_polygon[0]]):
-            if line_circle_intersect([Point(line[0]),Point(line[1])],
-                                     [Point(loc), size]):
+        for p in [self.polygon] + self.obstacles:
+            if is_circle_coliding_with_poligon(p, loc, size):
                 return True
         return False
 

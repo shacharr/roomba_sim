@@ -53,3 +53,10 @@ def polygon_bbox(poly):
             min(x[1] for x in poly),
             max(x[0] for x in poly),
             max(x[1] for x in poly)]
+
+def is_circle_coliding_with_poligon(polygon, center, radius):
+    for line in zip(polygon,polygon[1:]+[polygon[0]]):
+        if line_circle_intersect([Point(line[0]),Point(line[1])],
+                                 [Point(center), radius]):
+            return True
+    return False
