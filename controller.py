@@ -7,10 +7,18 @@ import arena_model
 import arena_view
 import roomba_model
 
+from helper_functions import *
 
 #ROOM_POLYGON = [(0,0),(640,0),(640,480),(0,480)]
 #ROOM_POLYGON = [(0,0),(640,0),(640,480),(320,480),(320,240),(0,240)]
 ROOM_POLYGON = [(0,0),(640,0),(640,480),(320,480),(250,240),(0,240)]
+
+SMALL_SQUARE = [(0,0),(10,0),(10,10),(0,10)]
+
+OBSTECLES = [transpose_polygon(SMALL_SQUARE,(200,45)),
+             transpose_polygon(SMALL_SQUARE,(270,45)),
+             transpose_polygon(SMALL_SQUARE,(200,125)),
+             transpose_polygon(SMALL_SQUARE,(270,125)),]
 
 ROOMBA_SIZE = 20
 
@@ -23,7 +31,7 @@ def main():
     clock = pygame.time.Clock()
 
     view = arena_view.ScreenView(ROOMBA_SIZE, [max(x[0] for x in ROOM_POLYGON),max(x[1] for x in ROOM_POLYGON)])
-    room_model = arena_model.RoomModel(ROOM_POLYGON)
+    room_model = arena_model.RoomModel(ROOM_POLYGON,OBSTECLES)
     roomba = roomba_model.RoombaModel((100,100), ROOMBA_SIZE, 1.9, 0, 3, room_model)
     done = False
     last_coverage = 0
