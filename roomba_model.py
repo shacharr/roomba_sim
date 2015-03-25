@@ -37,10 +37,10 @@ class RoombaModel(CleaningRobotModel):
             else:
                 while self.check_move():
                     self.turn(self.TURN_SIZE_ON_WALL_FOLLOW)
-            if self.time_in_mode > MODE_TIME_LIMIT[self.in_random_direction_mode]:
-                self.in_random_direction_mode = not self.in_random_direction_mode
-                self.time_in_mode = 0
-                print "Switched to mode",self.in_random_direction_mode
+        if self.time_in_mode > MODE_TIME_LIMIT[self.in_random_direction_mode]:
+            self.in_random_direction_mode = not self.in_random_direction_mode
+            self.time_in_mode = 0
+            print "Switched to mode",self.in_random_direction_mode
 
 
     def get_draw_info(self):
