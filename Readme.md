@@ -17,7 +17,9 @@ Currently, there is no support for obstacles in the room.
 
 Code is arranged in a classical MVC form.
 
-The arena_model module contains the Roomba and the Room models. The roomba has location, direction and parameters, as well as roomba navigation logic state. The room keeps a pygame surface indicating what area was cleaned already, as well as a polygon of the room to indicate where the walls are. It also keeps count of the clean vs. dirty pixels for statistics.
+The arena_model module contains the Room modeling class. The room keeps a pygame surface indicating what area was cleaned already, as well as a polygon of the room to indicate where the walls are. Similar polygons are used to indicate where there are obstacles in the room. It also keeps count of the clean vs. dirty pixels for statistics.
+
+The roomba is modeled in roomba_model, based upon a generic cleaning robot model kept in the cleaning_robot_model module. Cleaning robot has location, direction and parameters. The roomba class adds navigation logic state and the navigation logic to the robot.
 
 The arena_view module contains the major pygame interaction - drawing the roomba and the room, cleaning the screen, etc.
 
@@ -28,7 +30,8 @@ TODO:
 
 - Support for configuration which is not hard coded in the code
 
-- Support for obstacles in the room
+  * Specifically, specifying the room size and shape, obstacles and roomba size will be nice.
+  * Exposing the roomba logic parameters to allow easier tuning might be nice as well.
 
 - Nicer graphics
 
@@ -38,7 +41,7 @@ TODO:
 
 - Add the spiral cleaning mode that roomba is using in the beginning of cleaning in a room
 
-- Smarter mode switching logic?
+- Smarter mode switching logic? Especially for cleaning around obstacles.
 
 - Auto tuning of parameters (i.e. when to switch to what mode of cleaning) depending on room size?
 
