@@ -42,6 +42,3 @@ class RoombaModel(CleaningRobotModel):
             self.time_in_mode = 0
             print "Switched to mode",self.in_random_direction_mode
 
-
-    def get_draw_info(self):
-        return ([int(x) for x in self.loc],self.direction)
