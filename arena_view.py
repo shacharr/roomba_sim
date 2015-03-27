@@ -26,7 +26,7 @@ class ScreenView(object):
         self.screen.fill(self.WHITE)
         self.screen.blit(room_surface,(0,0))
 
-    def draw_roomba(self,mid_point, direction):
+    def draw_roomba(self,mid_point, direction, trace):
         pygame.draw.circle(self.screen, self.RED,
                            mid_point, self.roomba_size)
 
@@ -36,6 +36,7 @@ class ScreenView(object):
                                   for x in rotated_arrow))
         pygame.draw.polygon(self.screen, self.BLACK,
                             transposed_arrow)
+        pygame.draw.aalines(self.screen, self.RED, False, trace)
 
 def testView():
     pygame.init()

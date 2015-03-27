@@ -11,6 +11,7 @@ class CleaningRobotModel(object):
         self.size = size
         self.room = room
         self.cleaning_head_size = cleaning_head_size
+        self.trace = [location]
 
     def calc_move_next_loc(self):
         x,y = self.loc
@@ -30,6 +31,7 @@ class CleaningRobotModel(object):
             self.room.clean_box(self.size*1.9, self.speed,
                                 self.direction, mid_point)
             self.loc = new_loc
+            self.trace.append(new_loc)
             return False
         return True
 
@@ -54,4 +56,4 @@ class CleaningRobotModel(object):
         raise Exception("Pure virtual function called")
 
     def get_draw_info(self):
-        return ([int(x) for x in self.loc],self.direction)
+        return ([int(x) for x in self.loc],self.direction,self.trace)
