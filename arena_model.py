@@ -67,3 +67,11 @@ class RoomModel(object):
                     clean_count += 1
         del ar,sub_surf
         return (clean_count,dirty_count)
+
+    def is_good_start_point(self, loc, size):
+        ar = pygame.PixelArray(self.state)
+        if ar[loc[0],loc[1]] == self.state.map_rgb(self.DEAD_ZONE_COLOR):
+            return False
+        if self.is_coliding(loc, size):
+            return False
+        return True

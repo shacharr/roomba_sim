@@ -2,6 +2,7 @@ import time
 import pygame
 import math
 import matplotlib.pyplot
+import random
 
 import arena_model
 import arena_view
@@ -30,9 +31,16 @@ def main():
     stats = [0]
     clock = pygame.time.Clock()
 
-    view = arena_view.ScreenView(ROOMBA_SIZE, [max(x[0] for x in ROOM_POLYGON),max(x[1] for x in ROOM_POLYGON)])
+    max_x = max(x[0] for x in ROOM_POLYGON)
+    max_y = max(x[1] for x in ROOM_POLYGON)
+
+    view = arena_view.ScreenView(ROOMBA_SIZE, [max_x,max_y])
     room_model = arena_model.RoomModel(ROOM_POLYGON,OBSTECLES)
-    roomba = roomba_model.RoombaModel((100,100), ROOMBA_SIZE, 1.9, 0, 3, room_model)
+    start_x,start_y=random.randint(0,max_x),random.randint(0,max_y)
+    while not room_model.is_good_start_point((start_x,start_y),ROOMBA_SIZE):
+        start_x,start_y=random.randint(0,max_x),random.randint(0,max_y)
+
+    roomba = roomba_model.RoombaModel((start_x,start_y), ROOMBA_SIZE, 1.9, random.randint(0,360)*math.pi/180., 3, room_model)
     done = False
     last_coverage = 0
     steps_with_no_improvement = 0
