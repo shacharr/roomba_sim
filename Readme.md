@@ -35,8 +35,6 @@ TODO:
 
 - Nicer graphics
 
-- Support for collecting statistics without showing the graphics
-
 - Add the spiral cleaning mode that roomba is using in the beginning of cleaning in a room
 
 - Smarter mode switching logic? Especially for cleaning around obstacles.
