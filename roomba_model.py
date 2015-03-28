@@ -16,18 +16,22 @@ class RoombaModel(CleaningRobotModel):
         self.looking_for_wall = False
         self.time_in_mode = 0
 
+    def left_hand_tracking(self):
+        found_wall = False
+        for i in range(self.MAX_TURN_STEPS):
+            self.turn(-self.TURN_SIZE_ON_WALL_FOLLOW)
+            if self.check_move():
+                found_wall = True
+                break
+        if not found_wall:
+            self.looking_for_wall = True
+        self.turn(self.TURN_SIZE_ON_WALL_FOLLOW)
+
+
 
     def step(self):
         if not self.in_random_direction_mode and not self.looking_for_wall:
-            found_wall = False
-            for i in range(self.MAX_TURN_STEPS):
-                self.turn(-self.TURN_SIZE_ON_WALL_FOLLOW)
-                if self.check_move():
-                    found_wall = True
-                    break
-            if not found_wall:
-                self.looking_for_wall = True
-            self.turn(self.TURN_SIZE_ON_WALL_FOLLOW)
+            self.left_hand_tracking()
         collided = self.move()
         self.time_in_mode += 1
         if collided:
