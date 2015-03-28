@@ -35,8 +35,6 @@ TODO:
 
 - Nicer graphics
 
-- Add the spiral cleaning mode that roomba is using in the beginning of cleaning in a room
-
 - Smarter mode switching logic? Especially for cleaning around obstacles.
 
 - Auto tuning of parameters (i.e. when to switch to what mode of cleaning) depending on room size?

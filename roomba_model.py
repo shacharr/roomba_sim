@@ -10,10 +10,14 @@ class RoombaModel(CleaningRobotModel):
     MODE_TIME_LIMIT = [500,2000]
     TURN_SIZE_ON_WALL_FOLLOW = math.pi/180.
     MAX_TURN_STEPS = 360
+    SPIRAL_ANGLE_INIT = math.pi/18.
+    SPIRAL_ANGLE_RATIO = 0.995
     def __init__(self, *args, **kwargs):
         super(RoombaModel,self).__init__(*args, **kwargs)
         self.in_random_direction_mode = False
         self.looking_for_wall = False
+        self.spiral_mode = True
+        self.spiral_angle = self.SPIRAL_ANGLE_INIT
         self.time_in_mode = 0
         if "MODE_TIME_LIMIT" in kwargs:
             self.MODE_TIME_LIMIT = kwargs["MODE_TIME_LIMIT"]
@@ -33,20 +37,26 @@ class RoombaModel(CleaningRobotModel):
         self.turn(self.TURN_SIZE_ON_WALL_FOLLOW)
 
 
+    def spiral_step(self):
+        self.turn(self.spiral_angle)
+        self.spiral_angle = self.spiral_angle * self.SPIRAL_ANGLE_RATIO
 
     def step(self):
         if not self.in_random_direction_mode and not self.looking_for_wall:
             self.left_hand_tracking()
+        if self.spiral_mode:
+            self.spiral_step()
         collided = self.move()
         self.time_in_mode += 1
         if collided:
             self.looking_for_wall = False
+            self.spiral_mode = False
             if self.in_random_direction_mode:
                 self.turn(random.randint(0,360)*math.pi/180.)
             else:
                 while self.check_move():
                     self.turn(self.TURN_SIZE_ON_WALL_FOLLOW)
-        if self.time_in_mode > self.MODE_TIME_LIMIT[self.in_random_direction_mode]:
+        if not self.spiral_mode and self.time_in_mode > self.MODE_TIME_LIMIT[self.in_random_direction_mode]:
             self.in_random_direction_mode = not self.in_random_direction_mode
             self.time_in_mode = 0
             print "Switched to mode",self.in_random_direction_mode
