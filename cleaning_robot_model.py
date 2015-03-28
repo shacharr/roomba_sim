@@ -4,6 +4,7 @@ from helper_functions import *
 
 
 class CleaningRobotModel(object):
+    TURN_STEP_FOR_DRAWING = math.pi/18.
     def __init__(self, location, size, cleaning_head_size, direction, speed, room):
         self.loc = location
         self.direction = direction
@@ -35,21 +36,32 @@ class CleaningRobotModel(object):
             return False
         return True
 
-    def turn(self, relative_direction):
+    def clean_step(self,initial_step,step_size):
         delta_x = self.size * self.cleaning_head_size / 2.
-        cleaned_triangle_1 = [(0,0), (delta_x,0), rotate((delta_x,0), relative_direction)]
-        cleaned_triangle_2 = [(0,0), (-delta_x,0), rotate((-delta_x,0), relative_direction)]
+        cleaned_triangle_1 = [(0,0), (delta_x,0), rotate((delta_x,0), step_size)]
+        cleaned_triangle_2 = [(0,0), (-delta_x,0), rotate((-delta_x,0), step_size)]
 
         cleaned_triangle_1 = rotate_polygon(cleaned_triangle_1,
-                                            self.direction)
+                                            self.direction+initial_step)
         cleaned_triangle_2 = rotate_polygon(cleaned_triangle_2,
-                                            self.direction)
+                                            self.direction+initial_step)
 
         cleaned_triangle_1 = transpose_polygon(cleaned_triangle_1,self.loc)
         cleaned_triangle_2 = transpose_polygon(cleaned_triangle_2,self.loc)
         self.room.clean_polygon(cleaned_triangle_1)
         self.room.clean_polygon(cleaned_triangle_2)
 
+    def turn(self, relative_direction):
+        step = 1
+        if relative_direction < 0:
+            step = -1
+        target_step = abs(int(relative_direction/self.TURN_STEP_FOR_DRAWING))
+        for turn_step in range(0,target_step+1):
+            self.clean_step(step*turn_step*self.TURN_STEP_FOR_DRAWING,
+                            step*self.TURN_STEP_FOR_DRAWING)
+
+        self.clean_step(step*target_step*self.TURN_STEP_FOR_DRAWING,
+                        relative_direction - step*target_step*self.TURN_STEP_FOR_DRAWING)
         self.direction += relative_direction
 
     def step(self):
