@@ -5,9 +5,9 @@ from cleaning_robot_model import CleaningRobotModel
 
 from helper_functions import *
 
-MODE_TIME_LIMIT = [500,2000]
 
 class RoombaModel(CleaningRobotModel):
+    MODE_TIME_LIMIT = [500,2000]
     TURN_SIZE_ON_WALL_FOLLOW = math.pi/180.
     MAX_TURN_STEPS = 360
     def __init__(self, *args, **kwargs):
@@ -15,6 +15,11 @@ class RoombaModel(CleaningRobotModel):
         self.in_random_direction_mode = False
         self.looking_for_wall = False
         self.time_in_mode = 0
+        if "MODE_TIME_LIMIT" in kwargs:
+            self.MODE_TIME_LIMIT = kwargs["MODE_TIME_LIMIT"]
+        if "TURN_SIZE_ON_WALL_FOLLOW" in kwargs:
+            self.TURN_SIZE_ON_WALL_FOLLOW = kwargs["TURN_SIZE_ON_WALL_FOLLOW"]
+            self.MAX_TURN_STEPS = (2*math.pi)/self.TURN_SIZE_ON_WALL_FOLLOW
 
     def left_hand_tracking(self):
         found_wall = False
@@ -41,7 +46,7 @@ class RoombaModel(CleaningRobotModel):
             else:
                 while self.check_move():
                     self.turn(self.TURN_SIZE_ON_WALL_FOLLOW)
-        if self.time_in_mode > MODE_TIME_LIMIT[self.in_random_direction_mode]:
+        if self.time_in_mode > self.MODE_TIME_LIMIT[self.in_random_direction_mode]:
             self.in_random_direction_mode = not self.in_random_direction_mode
             self.time_in_mode = 0
             print "Switched to mode",self.in_random_direction_mode
